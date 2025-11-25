@@ -1,0 +1,58 @@
+/* ESTILIZAÇÃO geral */
+
+/* Importando fontes*/
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap'); 
+/*'Playfair Display' → Títulos e Roboto → Textos gerais*/
+
+
+
+body{
+    font-family: 'Roboto', sans-serif;
+    background-color: #14d3ad43;
+}
+
+/* NAVBAR */
+.custom-navbar {
+    background-color: #f8f9f7;
+    padding: 10px 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #4b5d2a;
+}
+
+.navbar-brand.nome-loja {
+    font-family: "Great Vibes", cursive;
+    font-size: 2.2rem;
+    font-weight: 400;
+}
+.nav-link {
+    font-size: 1rem;
+    color: #4b4b4b;
+    margin-left: 10px;
+}
+
+.nav-link:hover {
+    color: #2b3b1a;
+}
+
+/* CARDS DE PRODUTO */
+.product-card {
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+}
+
+.card-price {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #007bff;
+}

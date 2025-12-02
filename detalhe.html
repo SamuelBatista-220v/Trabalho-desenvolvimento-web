@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="detalhe-titulo">Detalhe do Produto - Floricultura</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" role="navigation" aria-label="Menu principal">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Floricultura</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Abrir menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="produtos.html">Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contato</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="carrinho.html" aria-label="Abrir carrinho">Carrinho (<span id="cart-count">0</span>)</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main-content" role="main" class="container my-5">
+        <div class="row">
+            
+            <div class="col-md-6">
+                <img id="produto-imagem-principal" src="img/flores/tulipa.jpg" class="img-fluid rounded shadow-sm mb-3" alt="Produto em destaque">
+                
+                <div id="produto-galeria" class="d-flex gap-2">
+                    <img src="img/flores/tulipa.jpg" class="img-thumbnail" width="80" alt="Miniatura 1">
+                    <img src="img/flores/tulipa2.jpg" class="img-thumbnail" width="80" alt="Miniatura 2">
+                    <img src="img/flores/tulipas.jpg" class="img-thumbnail" width="80" alt="Miniatura 3">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h1 id="produto-nome" class="display-5 fw-bold" style="font-family: 'Playfair Display', serif;">[Nome do Produto]</h1>
+                <hr>
+
+                <p class="text-success fs-3 fw-bold" id="produto-preco">R$ 89,90</p>
+                <p class="text-muted small">Cód: <span id="produto-id">prod1</span></p>
+
+                <h3 class="mt-4">Descrição:</h3>
+                <p id="produto-descricao">O clássico buquê de 12 rosas vermelhas, perfeito para celebrar o amor, a paixão e a beleza eterna. Entregue no mesmo dia.</p>
+                
+                <h3 class="mt-4">Quantidade:</h3>
+                <div class="input-group mb-3" style="width: 150px;">
+                    <button class="btn btn-outline-secondary" type="button" id="btn-diminuir">-</button>
+                    <input type="number" class="form-control text-center" value="1" min="1" id="input-quantidade">
+                    <button class="btn btn-outline-secondary" type="button" id="btn-aumentar">+</button>
+                </div>
+
+                <button id="btn-comprar-detalhe" class="btn btn-success btn-lg w-75 mt-3">
+                    <i class="bi bi-cart3 me-2"></i> Adicionar ao Carrinho
+                </button>
+                
+                <div class="mt-3">
+                    <button class="btn btn-outline-danger btn-like" data-id="prod1">
+                        <i class="bi bi-heart"></i> Adicionar à Lista de Desejos
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center mt-5 p-4 bg-light">
+        <p>Floricultura [Nome da Sua Loja] - 2025</p>
+        <p>Contador de visitas: <span id="visitor-count">0</span> — <a href="docs.html">Documentos (PDF)</a></p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

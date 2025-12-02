@@ -1,9 +1,0 @@
-.organizacao {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.organizacao .btn {
-    width: 100%;
-}

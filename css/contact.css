@@ -1,0 +1,46 @@
+/* Geral */
+body {
+    background: #fafafa;
+}
+
+/* Títulos */
+.titulo-pagina {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2e5d50;
+    text-align: center;
+}
+
+.subtitulo {
+    text-align: center;
+    color: #555;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Card principal */
+.card-contato {
+    border: none;
+    border-radius: 12px;
+    background: white;
+}
+
+/* Informações */
+.info-item {
+    margin-bottom: 6px;
+}
+
+/* Responsividade */
+@media (max-width: 576px) {
+    .titulo-pagina {
+        font-size: 1.6rem;
+    }
+
+    .card-contato {
+        padding: 1rem;
+    }
+
+    iframe {
+        border-radius: 8px;
+    }
+}

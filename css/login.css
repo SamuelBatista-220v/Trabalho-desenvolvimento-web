@@ -1,72 +1,193 @@
-/* Estilos específicos para a página de login */
+/* Página de Login - Belas Flores */
+
 .login-page {
-    min-height: 75vh;
+    min-height: 80vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 40px 0;
 }
 
+/* Card principal */
 .login-card {
     width: 100%;
     max-width: 420px;
     border-radius: 14px;
     overflow: hidden;
-    background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(245,255,240,0.65));
-    box-shadow: 0 10px 30px rgba(0,0,0,0.12), inset 0 -2px 6px rgba(0,0,0,0.03);
-    border: 1px solid rgba(255,255,255,0.6);
+
+    background: linear-gradient(135deg, #ffffffd9, #f2fff4bd);
+    box-shadow: 
+        0 10px 30px rgba(0,0,0,0.12),
+        inset 0 -2px 6px rgba(0,0,0,0.03);
+
+    border: 1px solid rgba(255,255,255,0.7);
 }
 
-.login-card .card-body { padding: 2.25rem; }
+.login-card .card-body {
+    padding: 2rem 2.25rem;
+}
 
+/* Logo do topo */
 .brand-top {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     gap: 12px;
-    margin-bottom: 10px;
 }
 .brand-top .logo {
-    width: 48px; height: 48px; border-radius: 50%; display:flex;align-items:center;justify-content:center;
-    background: linear-gradient(45deg, #6fcf97, #2f855a); color: #fff; font-weight:700; font-size:20px;
-    box-shadow: 0 4px 14px rgba(47,133,90,0.25);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #6fcf97, #2f855a);
+    color: #fff;
+    font-weight: 700;
+    font-size: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    box-shadow: 0 4px 14px rgba(47,133,90,0.28);
 }
-.brand-top h4 { margin: 0; font-family: 'Playfair Display', serif; font-weight:700; color:#24492b; }
 
-.login-card h3 { font-weight:700; margin-bottom: 0.75rem; color:#214624; }
+.brand-top h4 {
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #214624;
+}
 
-.input-group.has-toggle { position: relative; }
-.toggle-password { border-top-left-radius: 0; border-bottom-left-radius: 0; border-left: 1px solid rgba(0,0,0,0.08); }
+.login-card h3 {
+    margin-bottom: 0.9rem;
+    font-weight: 700;
+    color: #214624;
+}
 
-.form-control:focus { box-shadow: 0 0 0 0.125rem rgba(100, 190, 144, 0.18); border-color: #4caf50; }
+/* Inputs */
+.input-group.has-toggle {
+    position: relative;
+}
 
+.toggle-password {
+    border-left: 1px solid rgba(0,0,0,0.12);
+}
+
+.form-control:focus {
+    border-color: #40a36a;
+    box-shadow: 0 0 0 0.15rem rgba(64, 163, 106, 0.25);
+}
+
+/* Botão principal */
 .btn-login {
-    background: linear-gradient(90deg, #2f855a, #2bb673); border: none; color: #fff; font-weight:600;
-    padding: 0.6rem; transition: transform 0.15s ease, box-shadow 0.15s ease;
+    background: linear-gradient(90deg, #2f855a, #2bb673);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    padding: 0.65rem;
+    border-radius: 8px;
+
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
-.btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(40,134,78,0.18); }
 
-.divider { display:flex; align-items:center; text-align:center; gap:16px; }
-.divider span{ background:#fff; padding:0 10px; color:#6b6b6b; font-size:0.9rem; }
-.divider:before, .divider:after { content: ''; flex:1; height:1px; background:linear-gradient(90deg, rgba(0,0,0,0.06), rgba(0,0,0,0.03)); }
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(40,134,78,0.22);
+}
 
-.social-login .btn { font-weight:600; font-size:0.9rem; padding:0.4rem 0.6rem; }
+/* Divisor */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+.divider span {
+    padding: 0 10px;
+    background: #fff;
+    color: #6b6b6b;
+}
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #dddddd;
+}
 
-.alert { border-radius:8px; }
+/* Login social */
+.social-login .btn {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.45rem 0.7rem;
+}
 
-/* feedback animations */
-.card-shake { animation: shake 0.5s ease; }
-@keyframes shake { 10%, 90% { transform: translateX(-1px); } 20%, 80% { transform: translateX(2px); } 30%, 50%, 70% { transform: translateX(-4px); } 40%, 60% { transform: translateX(4px); } }
+/* Animações */
+.card-shake {
+    animation: shake 0.5s ease;
+}
 
-.show-success { animation: pop 0.35s ease; }
-@keyframes pop { from { transform: scale(0.98); opacity: 0 } to { transform: scale(1); opacity: 1 } }
+@keyframes shake {
+    10%, 90% { transform: translateX(-1px); }
+    20%, 80% { transform: translateX(2px); }
+    30%, 50%, 70% { transform: translateX(-4px); }
+    40%, 60% { transform: translateX(4px); }
+}
 
-/* small responsive tweaks */
+.show-success {
+    animation: pop 0.35s ease;
+}
+
+@keyframes pop {
+    from { transform: scale(0.97); opacity: 0 }
+    to { transform: scale(1); opacity: 1 }
+}
+
+/* Responsivo */
 @media (max-width: 576px) {
-    .login-card { padding: 0; }
-    .brand-top .logo { width: 42px; height:42px; }
+    .brand-top .logo {
+        width: 42px;
+        height: 42px;
+    }
+}
+/* Link para cadastro */
+.link-cadastro {
+    font-weight: 600;
+    color: #2f855a;
+    text-decoration: none;
 }
 
-/* keep organizacao class for other pages */
-.organizacao { display: flex; flex-direction: column; gap: 20px; }
-.organizacao .btn { width: 100%; }
+.link-cadastro:hover {
+    text-decoration: underline;
+}
+
+/* Melhor responsividade da página de login */
+@media (max-width: 576px) {
+    .login-card {
+        margin: 0 15px;
+        padding: 0;
+        max-width: 100%;
+        border-radius: 10px;
+    }
+
+    .login-card .card-body {
+        padding: 1.5rem;
+    }
+
+    .brand-top h4 {
+        font-size: 1.2rem;
+    }
+
+    h3.text-center.mb-4 {
+        font-size: 1.3rem;
+    }
+
+    .social-login .btn {
+        font-size: 0.8rem;
+        padding: 0.4rem;
+    }
+}
+
+/* Ajuste para o input de senha não quebrar */
+.input-group.has-toggle .form-control {
+    min-width: 0;
+}
+

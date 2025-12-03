@@ -1,0 +1,117 @@
+nome do projeto
+-Bellas flores:
+
+
+-Equipe:
+-Samuel Batista vieira
+-rayane kaylla venancio gomes aleves 
+
+
+
+Usuário de Teste: E-mail: admin@teste.com, Senha: 123456.
+
+
+
+
+-Descrição das funcionalidades-
+O projeto atende aos requisitos mínimos de utilização de conteúdo solicitados na especificação:
+HTML5 e CSS3 (arquivos .html e .css externos).
+Framework Bootstrap 5.3: Utilizado para layout e componentes responsivos.
+JavaScript (Puro e jQuery): Utilizado para funcionalidades dinâmicas.
+APIs Web: Simulação de cálculo de frete e uso de iFrame para Google Maps (localização).
+Usabilidade: Inclusão do documento laudo.pdf gerado a partir do formulário de checklist de inspeção.
+
+/////////////////////////////////////////////////////////
+"o site deve permitir que o usario realize login"
+"o site deve permitir que o usuario visualize os produtos"
+"o site deve permitir que o usuario realize um Cadastro"
+"o usuario deve ser capaz de colocar os produtos no carinho"
+"o usuario deve ser capaz de calcular o frete"
+"o usuario deve ser capaz de finalizar a compra"
+"o usuario deve ser capaz de visualizar a data de entrega"
+"o usuario deve ser capaz de cancelar a compra"
+"o usuario deve ser capaz de pesquisar os produtos por nome, preço, e itens mais vendidos"
+"o usuario deve ser capaz de visualizar as informações de contato da loja"
+"o usuario deve ser avisado caso haja uma opçao perigosa"
+"o usuario deve ser capaz de ver a localização da loja por um aplicativo de mapa"
+"o usuario deve ser capaz de pesquisar os produtos pelo noem"
+////////////////////////////////////////////////////////////
+
+
+Módulo	Funcionalidades	Implementação                                                        (JS/Armazenamento)
+Autenticação	Cadastro de novo usuário e Login (com opção "Lembrar")	                    localStorage (para armazenar dados de usuários)
+Catálogo	    Listagem de produtos (Flores, Ornamentais, Frutíferas)	                    JS Array (LISTA_PRODUTOS)
+Filtragem	    Ordenação (Preço, Mais Vendidos) e Filtro por Nome/Preço Máximo	            JS/jQuery (Lógica na função carregarListaProdutos)
+Carrinho	    Adicionar/remover itens, ajustar quantidade e calcular total	            localStorage (chave carrinho)
+Checkout	    Simulação de cálculo de frete por CEP e confirmação de pedido	            Simulação de API em JS (simularFrete)
+Pedidos       	Exibição de histórico de pedidos finalizados (com opção de cancelamento)	localStorage (chave pedidos_feitos)
+Geral	        Contador de visitas na página	localStorage (chave contadorVisitas)
+
+
+
+Abaixo está a explicação detalhada de cada seção e função presente no código:
+
+
+1. Dados de Base e Variáveis Globais (Seção 1)
+Variável/Constante	                         Descrição
+LISTA_PRODUTOS	                            JSON Array que simula o banco de dados do seu e-commerce. Contém todos os produtos com suas propriedades (id, nome, preço, vendidos, descrição, categoria, imagens).
+criterioOrdenacaoAtual                   	Armazena o critério atual de ordenação da lista de produtos (ex: 'mais_vendidos').
+freteCalculado	                            Armazena o valor do frete calculado na simulação de checkout.
+fretePrazo	                                Armazena o prazo de entrega calculado na simulação de checkout.
+ 
+
+2. Funções de Suporte (Helpers)
+Função	                                     Finalidade
+getProduto(id)                          	Recebe um id e retorna o objeto do produto correspondente da LISTA_PRODUTOS.
+getProdutosPorCategoria(categoria)	        Recebe uma categoria e retorna um subconjunto de produtos que pertencem a ela. Retorna todos os produtos se a categoria for 'todos'.
+ordenarProdutos(produtos, criterio)	        Recebe uma lista de produtos e o criterio (preço, vendidos) e retorna a lista reordenada. É a função que implementa a lógica de "Mais Vendidos" (ordenando pela chave vendidos).
+gerarNovoIdPedido()	                        Gera um ID de pedido simulado e único combinando o tempo atual (Date.now()) e um número aleatório.
+simularFrete(cep)	                        simulação de API de Frete. Recebe um CEP e retorna um objeto contendo o valor do frete e o prazo de entrega, com base em faixas de CEP definidas de forma simplificada.
+
+3. Funções de Roteamento e Inicialização 
+Função                                       Finalidade
+DOMContentLoaded	                        Garante que o código só é executado após o HTML da página estar totalmente carregado.
+Roteamento Login/Cadastro	                Liga as funções realizarLogin e realizarCadastro aos eventos de submit dos respectivos formulários.
+Roteamento Carrinho	                        Liga a função carregarModalCheckout ao botão de finalizar e configura listeners para cálculo de frete.
+Roteamento Produtos	                        Chama configurarOrdenacao e carregarListaProdutos se estiver nas páginas de listagem (produtos.html).
+Roteamento Pedidos	                        Chama carregarHistoricoPedidos se estiver na página de pedidos.
+Contadores/Menu	                            Chama atualizarContadorDeVisitas, config
+
+4.Funções de Carrinho                        Finalidade
+adicionarAoCarrinho(id, nome...)	        Lógica central do carrinho. Adiciona um novo item ou incrementa a quantidade de um item existente no localStorage.
+carregarCarrinho()	                        Renderiza (cria o HTML) e exibe os itens do carrinho dentro da tabela na página carrinho.html, chamando calcularTotal.
+removerItemDoCarrinho(id)	                Remove um item da lista do carrinho.
+aumentarQtd(id)	                            Aumenta a quantidade de um item no carrinho em 1.
+diminuirQtd(id)	                            Diminui a quantidade de um item no carrinho em 1. Se a quantidade cair para 1 ou menos, o item é removido.
+calcularTotal(carrinho)	                    Soma o preço total de todos os itens e atualiza o elemento visual do total.
+atualizarContadorMenu()	                    Calcula o número total de itens e atualiza o contador exibido no ícone do carrinho no menu de navegação.
+
+5. Funções de Produtos e Detalhe
+unção	                                     Finalidade
+configurarOrdenacao()	                    Configura os botões de ordenação (Menor Preço, Mais Vendidos, etc.) para que, ao serem clicados, chamem carregarListaProdutos com o novo critério.
+carregarListaProdutos(criterio)            	Função principal da listagem. Filtra produtos por categoria, aplica a ordenação e constrói o HTML dos cartões de produto para exibição. Neste código, é o ponto onde você precisou implementar a lógica de filtro por Nome e Preço.
+carregarDetalheProduto()	                Carrega as informações e imagens de um único produto (detalhe.html), incluindo a galeria de miniaturas clicáveis e a lógica para aumentar/diminuir a quantidade antes da compra.
+configurarBotoesProduto()	                Esta função foi removida/substituída nas últimas correções para evitar o bug de duplicação, mas sua função original era adicionar listeners de clique aos botões "Adicionar ao Carrinho".)
+
+
+6. Funções de Checkout e Histórico de Pedidos 
+Função                                       Finalidade
+carregarModalCheckout()	                    Prepara e zera os campos do modal de finalização de compra, listando os itens do carrinho e zerando o frete antes do cálculo.
+calcularFreteEAtualizarModal()	            Executa a simularFrete(cep), atualiza o valor do frete e o total a pagar no modal, liberando o botão de confirmação.
+finalizarCompra()                        	Nesta versão do código, esta função estava incompleta/incorreta e não salvava o histórico. Em correções futuras, ela deve ser substituída pela função confirmarPedido, que salva o carrinho em pedidos_feitos e limpa o carrinho atual.)
+carregarHistoricoPedidos()	                Exibe todos os pedidos salvos na chave pedidos_feitos do localStorage na página pedidos.html. Também exibe a mensagem de confirmação se o usuário acabou de ser redirecionado após o checkout.
+excluirPedido(id)	                        Esta função foi adicionada em correções anteriores, mas está ausente neste bloco. Sua finalidade é remover um pedido específico da lista pedidos_feitos do localStorage, implementando o botão "Excluir/Cancelar").
+
+
+7. Funções de Login e Cadastro 
+Função	Finalidade
+realizarLogin(event)	                    Lida com a submissão de credenciais, verifica a autenticação (incluindo admin@teste.com), e armazena o estado de login (usuarioLogado e nomeUsuario) em localStorage ou sessionStorage.
+realizarCadastro(event)	                    Lida com a criação de novos usuários, validando a consistência das senhas e a não-duplicidade do e-mail, e salva as credenciais no localStorage (chave users).
+estaLogado()	                            Verifica se o estado de login está presente em localStorage ou sessionStorage.
+atualizarContadorDeVisitas(elemento)	    Lê, incrementa em 1 e salva o número total de visitas ao site na chave contadorVisitas do localStorage.
+atualizarMenuUsuario()	                    Verifica se o usuário está logado e substitui o link "Login" no menu por um menu dropdown que exibe o nome do usuário e o botão "Sair".
+logout()	                                Desloga o usuário limpando todas as chaves de login no localStorage e sessionStorage.
+Bloco jQuery	                            Lida com a melhoria visual do Login e Cadastro (animação de toggle-password, ícones de loading nos botões e animações de sucesso/erro).
+
+
+Usuário de Teste: E-mail: admin@teste.com, Senha: 123456.

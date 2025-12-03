@@ -409,6 +409,32 @@ section { padding-top: 1rem; padding-bottom: 1rem; }
 /* NAVBAR - ajustes visuais */
 .navbar-brand { font-family: 'Great Vibes', cursive; font-size: 1.6rem; color: #2b5b2a !important; }
 
+/* Logo no navbar */
+.navbar-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #2f855a;
+    box-shadow: 0 2px 8px rgba(47,133,90,0.2);
+    transition: transform 0.3s ease;
+}
+
+.navbar-logo:hover {
+    transform: scale(1.1);
+}
+
+@media (max-width: 576px) {
+    .navbar-logo {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .navbar-brand {
+        font-size: 1.3rem;
+    }
+}
+
 /* Toast default look (fallback) */
 #toast-container .toast { border-radius: 10px; padding: 8px 10px; }
 

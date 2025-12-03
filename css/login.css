@@ -30,10 +30,27 @@
 /* Logo do topo */
 .brand-top {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 12px;
+    margin-bottom: 1rem;
 }
+
+.brand-top .logo-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #2f855a;
+    box-shadow: 0 4px 14px rgba(47,133,90,0.28);
+    transition: transform 0.3s ease;
+}
+
+.brand-top .logo-img:hover {
+    transform: scale(1.05);
+}
+
 .brand-top .logo {
     width: 50px;
     height: 50px;
@@ -146,6 +163,11 @@
     .brand-top .logo {
         width: 42px;
         height: 42px;
+    }
+    
+    .brand-top .logo-img {
+        width: 60px;
+        height: 60px;
     }
 }
 /* Link para cadastro */

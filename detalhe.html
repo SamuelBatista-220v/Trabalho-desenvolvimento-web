@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="detalhe-titulo">Detalhe do Produto - Floricultura</title>
+    <title id="detalhe-titulo">Detalhe do Produto - Belas Flores</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -14,7 +14,10 @@
     <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
     <nav class="navbar navbar-expand-lg bg-body-tertiary" role="navigation" aria-label="Menu principal">
         <div class="container">
-            <a class="navbar-brand" href="index.html">Floricultura</a>
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <img src="img/flores/tulipas.jpg" alt="Belas Flores" class="navbar-logo me-2">
+                <span>Belas Flores</span>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Abrir menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -34,24 +37,22 @@
         <div class="row">
             
             <div class="col-md-6">
-                <img id="produto-imagem-principal" src="img/flores/tulipa.jpg" class="img-fluid rounded shadow-sm mb-3" alt="Produto em destaque">
+                <img id="produto-imagem-principal" src="" class="img-fluid rounded shadow-sm mb-3" alt="Produto em destaque">
                 
                 <div id="produto-galeria" class="d-flex gap-2">
-                    <img src="img/flores/tulipa.jpg" class="img-thumbnail" width="80" alt="Miniatura 1">
-                    <img src="img/flores/tulipa2.jpg" class="img-thumbnail" width="80" alt="Miniatura 2">
-                    <img src="img/flores/tulipas.jpg" class="img-thumbnail" width="80" alt="Miniatura 3">
+                    <!-- As miniaturas serão carregadas dinamicamente via JavaScript -->
                 </div>
             </div>
 
             <div class="col-md-6">
-                <h1 id="produto-nome" class="display-5 fw-bold" style="font-family: 'Playfair Display', serif;">[Nome do Produto]</h1>
+                <h1 id="produto-nome" class="display-5 fw-bold" style="font-family: 'Playfair Display', serif;">Carregando...</h1>
                 <hr>
 
-                <p class="text-success fs-3 fw-bold" id="produto-preco">R$ 89,90</p>
-                <p class="text-muted small">Cód: <span id="produto-id">prod1</span></p>
+                <p class="text-success fs-3 fw-bold" id="produto-preco">R$ 0,00</p>
+                <p class="text-muted small">Cód: <span id="produto-id">-</span></p>
 
                 <h3 class="mt-4">Descrição:</h3>
-                <p id="produto-descricao">O clássico buquê de 12 rosas vermelhas, perfeito para celebrar o amor, a paixão e a beleza eterna. Entregue no mesmo dia.</p>
+                <p id="produto-descricao">Carregando informações do produto...</p>
                 
                 <h3 class="mt-4">Quantidade:</h3>
                 <div class="input-group mb-3" style="width: 150px;">
@@ -75,7 +76,7 @@
     </main>
 
     <footer class="text-center mt-5 p-4 bg-light">
-        <p>Floricultura [Nome da Sua Loja] - 2025</p>
+        <p>Belas Flores [Nome da Sua Loja] - 2025</p>
         <p>Contador de visitas: <span id="visitor-count">0</span> — <a href="docs.html">Documentos (PDF)</a></p>
     </footer>
 

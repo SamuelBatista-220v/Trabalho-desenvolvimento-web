@@ -1,6 +1,6 @@
 # Trabalho-desenvolvimento-web
 
-Pequeno projeto/front-end de uma floricultura. Realizei correções e melhorias visuais e funcionais em todo o projeto.
+Pequeno projeto/front-end de uma floricultura (Belas Flores). Realizei correções e melhorias visuais e funcionais em todo o projeto.
 
 O que foi feito (resumo):
 - Melhorias visuais e responsividade no formulário de login (css/login.css)

@@ -8,7 +8,7 @@ const LISTA_PRODUTOS = [
         nome: "Buquê de Rosas Vermelhas", 
         preco: 89.90, 
         vendidos: 150, 
-        descricao: "O clássico buquê de 12 rosas vermelhas, perfeito para celebrar o amor, a paixão e a beleza eterna. Entregue no mesmo dia.",
+        descricao: "Buquê elegante composto por rosas vermelhas frescas e selecionadas. Perfeito para expressar sentimentos de amor, paixão e admiração. Ideal para presentear em ocasiões especiais como aniversários, Dia dos Namorados ou simplesmente para surpreender alguém especial. As rosas são cuidadosamente arranjadas e entregues frescas, garantindo durabilidade e beleza.",
         img: "img/flores/tulipas.jpg",
         categoria: "buques",
         imagens_extras: ["img/flores/tulipa.jpg", "img/flores/tulipa2.jpg", "img/flores/tulipas.jpg"] 
@@ -18,7 +18,7 @@ const LISTA_PRODUTOS = [
         nome: "Orquídea Branca", 
         preco: 120.50, 
         vendidos: 80, 
-        descricao: "Elegância e sofisticação em um vaso. Uma flor duradoura para decorar qualquer ambiente interno.",
+        descricao: "Orquídea branca de rara beleza e elegância, cultivada com cuidado especial. Esta planta ornamental é conhecida por sua longa duração e flores delicadas que trazem sofisticação a qualquer ambiente. Ideal para decoração de interiores, escritórios ou como presente especial. Requer cuidados moderados e oferece floração prolongada, sendo uma excelente escolha para quem busca beleza duradoura.",
         img: "img/flores/astromelia.jpg", 
         categoria: "ornamentais",
         imagens_extras: ["img/flores/astromelia.jpg", "img/flores/astromelia2.jpg", "img/flores/astromelia3.jpg"] 
@@ -28,17 +28,17 @@ const LISTA_PRODUTOS = [
         nome: "Muda de Goiaba", 
         preco: 59.90, 
         vendidos: 40, 
-        descricao: "Muda de goiaba para pomares domésticos, ideal para cultivo em vasos grandes ou jardins. Começa a produzir em 1 ano.",
+        descricao: "Muda de goiaba de qualidade, selecionada para garantir bom desenvolvimento e produção de frutos saborosos. Ideal para cultivo em pomares domésticos, jardins ou até mesmo em vasos grandes. A goiabeira é uma árvore de fácil cultivo, adaptável a diferentes tipos de solo e clima. Começa a produzir frutos em aproximadamente 1 ano após o plantio, oferecendo goiabas doces e suculentas ricas em vitamina C.",
         img: "img/arvoresfruitiferas/goiba-no-pe.jpg",
         imagens_extras: ["img/arvoresfruitiferas/goiba-no-pe.jpg", "img/arvoresfruitiferas/goibacortada.jpg", "img/arvoresfruitiferas/pe-de-laranja.jpg"],
         categoria: "frutiferas"
     },
     {
         id: "prod4", 
-        nome: "Ipê Amarelo", 
+        nome: "Ipê Amarelo",
         preco: 150.00, 
         vendidos: 10, 
-        descricao: "Árvore ornamental e nativa, famosa pela sua floração exuberante e rápido crescimento. Ideal para paisagismo.",
+        descricao: "Muda de Ipê Amarelo, árvore nativa brasileira conhecida por sua impressionante floração dourada que transforma qualquer paisagem. Esta espécie ornamental é perfeita para jardins, praças e áreas verdes, oferecendo sombra generosa e beleza incomparável durante a primavera. O Ipê Amarelo possui crescimento moderado a rápido, adapta-se bem a diferentes condições climáticas e é resistente a pragas. Uma escolha ideal para quem busca árvores de grande porte com valor paisagístico excepcional.",
         img: "img/arvores ornamentais/ipe.jpg",
         imagens_extras: ["img/arvores ornamentais/ipe.jpg", "img/arvores ornamentais/ipenaroça.jpg", "img/arvores ornamentais/fundoip.jpg"],
         categoria: "ornamentais"
@@ -48,10 +48,30 @@ const LISTA_PRODUTOS = [
         nome: "Antúrio Vermelho", 
         preco: 45.00, 
         vendidos: 120, 
-        descricao: "Flor tropical ideal para ambientes internos. Fácil de cuidar e com cores vibrantes. Purifica o ar.",
+        descricao: "Antúrio vermelho, planta tropical de fácil cultivo e manutenção, perfeita para decorar ambientes internos. Suas folhas brilhantes e flores em formato de coração trazem cor e vida a qualquer espaço. Além de sua beleza ornamental, o antúrio é conhecido por suas propriedades de purificação do ar, removendo toxinas do ambiente. Requer poucos cuidados, apenas regas moderadas e luz indireta, sendo ideal para iniciantes em jardinagem ou para quem busca plantas resistentes e duradouras.",
         img: "img/flores/anturio.jpg",
         imagens_extras: ["img/flores/anturio.jpg", "img/flores/anturio (2).jpg", "img/flores/lirioazul.jpg"],
         categoria: "flores"
+    },
+    {
+        id: "prod6", 
+        nome: "Buquê de Girassóis", 
+        preco: 75.00, 
+        vendidos: 95, 
+        descricao: "Buquê composto por girassóis frescos e vibrantes, flores que simbolizam alegria, energia positiva e otimismo. Este arranjo colorido é perfeito para trazer luz e calor a qualquer ambiente, seja para decorar sua casa, presentear alguém especial ou celebrar momentos felizes. Os girassóis são cuidadosamente selecionados e arranjados, garantindo um visual impactante e duradouro. Ideal para quem busca transmitir sentimentos de felicidade e positividade através das flores.",
+        img: "img/flores/astromelia.jpg",
+        imagens_extras: ["img/flores/astromelia.jpg", "img/flores/astromelia2.jpg", "img/flores/astromelia3.jpg"],
+        categoria: "buques"
+    },
+    {
+        id: "prod7", 
+        nome: "Muda de Laranjeira", 
+        preco: 69.90, 
+        vendidos: 65, 
+        descricao: "Muda de laranjeira de excelente qualidade, desenvolvida para produção de laranjas doces, suculentas e ricas em vitamina C. Perfeita para cultivo em pomares domésticos, jardins ou até mesmo em vasos grandes para varandas e terraços. A laranjeira é uma árvore frutífera de fácil cultivo, adaptável a diferentes condições e que oferece não apenas frutos deliciosos, mas também belas flores perfumadas. Começa a produzir frutos em aproximadamente 2 anos após o plantio, proporcionando colheitas regulares e abundantes.",
+        img: "img/arvoresfruitiferas/pe-de-laranja.jpg",
+        imagens_extras: ["img/arvoresfruitiferas/pe-de-laranja.jpg", "img/arvoresfruitiferas/laranja-no-pe.jpg", "img/arvoresfruitiferas/laranjas.jpg"],
+        categoria: "frutiferas"
     }
 ];
 
@@ -187,7 +207,6 @@ document.addEventListener("DOMContentLoaded", function() {
         atualizarContadorDeVisitas(document.getElementById("visitor-count"));
     }
     
-    configurarBotoesProduto();
     atualizarContadorMenu();
     // Adicione esta linha para o menu de login/logout
     atualizarMenuUsuario(); 
@@ -516,19 +535,30 @@ function configurarFiltrosBusca() {
     const valorPrecoSpan = document.getElementById('valor-preco');
     const btnAplicarFiltros = document.getElementById('btn-aplicar-filtros');
 
-    // 1. Inicializa o span de preço (formatado)
+    // 1. Inicializa o span de preço (formatado) e a variável global
     if(rangePreco && valorPrecoSpan) {
-        valorPrecoSpan.textContent = parseFloat(rangePreco.value).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-        filtroPrecoMaximoAtual = parseFloat(rangePreco.value);
+        const valorInicial = parseFloat(rangePreco.value) || 200.00;
+        valorPrecoSpan.textContent = valorInicial.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        filtroPrecoMaximoAtual = valorInicial;
     }
     
-    // 2. Listener para o Range Slider (atualiza o texto e a variável de filtro)
-    if (rangePreco) {
+    // 2. Listener para o Range Slider (atualiza o texto em tempo real)
+    if (rangePreco && valorPrecoSpan) {
         rangePreco.addEventListener('input', function() {
             const valor = parseFloat(this.value);
             valorPrecoSpan.textContent = valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-            // Atualiza a variável global temporariamente
+        });
+        
+        // Aplica o filtro automaticamente quando o slider é solto
+        rangePreco.addEventListener('change', function() {
+            const valor = parseFloat(this.value);
             filtroPrecoMaximoAtual = valor;
+            // Atualiza o filtro de nome também se houver valor
+            if (inputBuscaNome) {
+                filtroNomeAtual = inputBuscaNome.value.trim();
+            }
+            // Aplica os filtros automaticamente
+            carregarListaProdutos(criterioOrdenacaoAtual);
         });
     }
 
@@ -537,19 +567,27 @@ function configurarFiltrosBusca() {
         btnAplicarFiltros.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Atualiza o filtro de nome global e aplica o filtro de preço
+            // Atualiza o filtro de nome global
             if (inputBuscaNome) {
                 filtroNomeAtual = inputBuscaNome.value.trim();
+            }
+            // Garante que o filtro de preço está atualizado
+            if (rangePreco) {
+                filtroPrecoMaximoAtual = parseFloat(rangePreco.value);
             }
             // Chama a função principal de carregamento/filtragem
             carregarListaProdutos(criterioOrdenacaoAtual);
         });
     }
 
-    // 4. Bônus: Filtra ao digitar no campo de nome (melhor experiência)
+    // 4. Filtra ao digitar no campo de nome (melhor experiência)
     if (inputBuscaNome) {
         inputBuscaNome.addEventListener('keyup', function() {
             filtroNomeAtual = this.value.trim();
+            // Garante que o filtro de preço está atualizado
+            if (rangePreco) {
+                filtroPrecoMaximoAtual = parseFloat(rangePreco.value);
+            }
             // Debounce: espera 300ms antes de recarregar para não sobrecarregar
             clearTimeout(window.filtroTimer); 
             window.filtroTimer = setTimeout(() => {
@@ -561,79 +599,6 @@ function configurarFiltrosBusca() {
 // ===============================================
 // 2. FUNÇÕES ESSENCIAIS DE NAVEGAÇÃO E LÓGICA
 // ===============================================
-
-document.addEventListener("DOMContentLoaded", function() {
-    
-    // --- ROTEAR AS FUNÇÕES PELA PÁGINA ---
-    if (document.getElementById("form-login")) {
-        document.getElementById("form-login").addEventListener("submit", realizarLogin);
-        if (estaLogado()) window.location.href = "index.html";
-    }
-    if (document.getElementById("form-cadastro")) {
-        document.getElementById("form-cadastro").addEventListener("submit", realizarCadastro);
-    }
-
-    if (document.getElementById("cart-items")) {
-        // CONEXÃO DO CHECKOUT
-        const btnFinalizar = document.getElementById("btn-finalizar-compra");
-        if (btnFinalizar) {
-            btnFinalizar.addEventListener('click', finalizarCompra);
-        }
-        const confirmBtn = document.getElementById('checkout-confirm');
-        if (confirmBtn) {
-            confirmBtn.addEventListener('click', function(){
-                // Confirma o pedido: finalize, limpar carrinho e notificar
-                let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-                if (carrinho.length === 0) {
-                    if (typeof showToast === 'function') showToast('Seu carrinho está vazio', 'Carrinho');
-                    // fecha modal programaticamente
-                    const modalEl = document.getElementById('checkoutModal');
-                    if (modalEl) { var modal = bootstrap.Modal.getInstance(modalEl); if (modal) modal.hide(); }
-                    return;
-                }
-
-                // preparar resumo e mensagens
-                let total = 0;
-                let resumoItens = '';
-                carrinho.forEach(item => {
-                    total += item.preco * item.qtd;
-                    resumoItens += `- ${item.nome} (${item.qtd}x)\n`;
-                });
-                const dataEnvio = new Date(); dataEnvio.setDate(dataEnvio.getDate() + 3);
-                const dataFormatada = dataEnvio.toLocaleDateString('pt-br');
-
-                // fechar modal
-                const modalEl = document.getElementById('checkoutModal');
-                if (modalEl) { var modal = bootstrap.Modal.getInstance(modalEl); if (modal) modal.hide(); }
-
-                // sucesso toast e limpeza
-                if (typeof showToast === 'function') showToast('Compra realizada com sucesso! Verifique seu e-mail para confirmação.', 'Pedido concluído');
-                localStorage.removeItem('carrinho');
-                setTimeout(function(){ window.location.reload(); }, 900);
-            });
-        }
-        carregarCarrinho(); 
-    }
-    
-    if (document.getElementById("visitor-count")) {
-        atualizarContadorDeVisitas(document.getElementById("visitor-count"));
-    }
-    
-    // Roteamento para páginas de Produto
-    if (document.getElementById("produto-nome")) {
-        carregarDetalheProduto();
-    }
-    
-    if (document.getElementById("lista-produtos")) {
-        configurarOrdenacao(); 
-        carregarListaProdutos(criterioOrdenacaoAtual); 
-    }
-
-    // Configura os botões e contadores em todas as páginas
-    configurarBotoesProduto();
-    atualizarContadorMenu();
-    atualizarMenuUsuario();
-});
 
 // Atualiza o menu (Login → Olá, usuário / Logout) dinamicamente
 function atualizarMenuUsuario() {
@@ -842,7 +807,11 @@ function configurarOrdenacao() {
 
             criterioOrdenacaoAtual = novoCriterio;
 
-            document.getElementById('criterio-selecionado').textContent = `Ordenar por: ${textoBotao}`;
+            // Atualiza o texto do botão dropdown
+            const btnDropdown = document.querySelector('[data-bs-toggle="dropdown"]');
+            if (btnDropdown) {
+                btnDropdown.textContent = `Ordenar por: ${textoBotao}`;
+            }
 
             carregarListaProdutos(criterioOrdenacaoAtual);
         });
@@ -923,11 +892,21 @@ function carregarListaProdutos(criterio = 'mais_vendidos') {
     // NOVO: APLICAÇÃO DOS FILTROS POR NOME E PREÇO
     // ===================================
     
+    // Garante que as variáveis de filtro estão inicializadas
+    if (typeof filtroNomeAtual === 'undefined') {
+        filtroNomeAtual = '';
+    }
+    if (typeof filtroPrecoMaximoAtual === 'undefined' || filtroPrecoMaximoAtual === null) {
+        filtroPrecoMaximoAtual = 200.00;
+    }
+    
     produtosFiltrados = produtosFiltrados.filter(produto => {
         // Filtro por Nome (insensível a maiúsculas/minúsculas)
-        const passaNoFiltroNome = produto.nome.toLowerCase().includes(filtroNomeAtual.toLowerCase());
+        // Se o filtro de nome estiver vazio, mostra todos os produtos
+        const passaNoFiltroNome = !filtroNomeAtual || filtroNomeAtual.trim() === '' || 
+                                   produto.nome.toLowerCase().includes(filtroNomeAtual.toLowerCase());
         
-        // Filtro por Preço
+        // Filtro por Preço (garante que o preço seja um número válido)
         const passaNoFiltroPreco = produto.preco <= filtroPrecoMaximoAtual;
 
         return passaNoFiltroNome && passaNoFiltroPreco;
@@ -997,7 +976,7 @@ function carregarDetalheProduto() {
     }
 
     // 2. Preenche os campos do HTML
-    if(document.getElementById("detalhe-titulo")) document.getElementById("detalhe-titulo").textContent = produto.nome + " - Floricultura";
+    if(document.getElementById("detalhe-titulo")) document.getElementById("detalhe-titulo").textContent = produto.nome + " - Belas Flores";
     if(document.getElementById("produto-nome")) document.getElementById("produto-nome").textContent = produto.nome;
     if(document.getElementById("produto-preco")) document.getElementById("produto-preco").textContent = produto.preco.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
     if(document.getElementById("produto-id")) document.getElementById("produto-id").textContent = produto.id;
@@ -1227,7 +1206,7 @@ function initMap() {
     new google.maps.Marker({
         position: floricultura,
         map: map,
-        title: "Floricultura Belas Flores",
+        title: "Belas Flores",
     });
 }
 

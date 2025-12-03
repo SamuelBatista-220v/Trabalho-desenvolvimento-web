@@ -1,3 +1,7 @@
+// ===============================================
+// 1. BASE DE DADOS DOS PRODUTOS (SIMULAÇÃO) - FINAL
+// ===============================================
+
 const LISTA_PRODUTOS = [
     {
         id: "prod1", 
@@ -51,7 +55,12 @@ const LISTA_PRODUTOS = [
     }
 ];
 
-// Funções de Suporte à Base de Dados
+// Variáveis Globais de Controle de Frete
+let criterioOrdenacaoAtual = 'mais_vendidos'; 
+let freteCalculado = 0;
+let fretePrazo = 0;
+
+// Funções de Suporte (getProduto, ordenarProdutos, etc.)
 function getProduto(id) {
     return LISTA_PRODUTOS.find(p => p.id === id);
 }
@@ -74,9 +83,270 @@ function ordenarProdutos(produtos, criterio) {
     return produtos;
 }
 
-let criterioOrdenacaoAtual = 'mais_vendidos'; 
+function gerarNovoIdPedido() {
+    return 'BR' + Date.now().toString().slice(-8) + Math.floor(Math.random() * 99);
+}
+
+/**
+ * Simula a API de cálculo de Frete do Correios (Front-End)
+ */
+function simularFrete(cep) {
+    if (!cep || cep.length < 8) {
+        return { frete: 0, prazo: 0 };
+    }
+    
+    const cepBase = cep.substring(0, 5);
+    let frete = 15.00;
+    let prazo = 5;
+
+    if (cepBase >= '30000' && cepBase < '40000') { 
+        frete = 18.50;
+        prazo = 3;
+    } else if (cepBase >= '50000' && cepBase < '70000') { 
+        frete = 28.90;
+        prazo = 7;
+    } else if (cepBase >= '70000') { 
+        frete = 40.00;
+        prazo = 10;
+    }
+
+    return { frete, prazo };
+}
 
 
+// ===============================================
+// 3. FUNÇÕES DE ROTEAMENTO E INICIALIZAÇÃO
+// ===============================================
+
+document.addEventListener("DOMContentLoaded", function() {
+    
+    // --- ROTEAMENTO PRINCIPAL ---
+    if (document.getElementById("form-login")) {
+        document.getElementById("form-login").addEventListener("submit", realizarLogin);
+        if (estaLogado()) window.location.href = "index.html";
+    }
+    if (document.getElementById("form-cadastro")) {
+        document.getElementById("form-cadastro").addEventListener("submit", realizarCadastro);
+    }
+    
+    // Roteamento para Carrinho/Checkout
+    if (document.getElementById("cart-items")) {
+        const btnModal = document.querySelector('[data-bs-target="#checkoutModal"]');
+        const btnConfirmar = document.getElementById("checkout-confirm");
+        const btnCalcularFrete = document.getElementById("btn-calcular-frete");
+        const inputCep = document.getElementById("input-cep");
+
+        // NOVO: Adiciona listener para abrir o modal e carregar os dados
+        if (btnModal) {
+            btnModal.addEventListener('click', carregarModalCheckout);
+        }
+
+        if (btnConfirmar) {
+            btnConfirmar.addEventListener('click', finalizarCompra);
+        }
+        
+        if (btnCalcularFrete) {
+            btnCalcularFrete.addEventListener('click', calcularFreteEAtualizarModal);
+        }
+
+        if (inputCep) {
+            inputCep.addEventListener('input', function() {
+                freteCalculado = 0; 
+                if (btnConfirmar) btnConfirmar.disabled = true;
+                const freteRes = document.getElementById('frete-resultado');
+                if (freteRes) freteRes.innerHTML = 'Insira o CEP (8 dígitos) para calcular o valor e prazo de entrega.';
+            });
+        }
+        
+        carregarCarrinho(); 
+    }
+
+    // Roteamento para Histórico de Pedidos
+    if (document.getElementById("lista-pedidos")) {
+        carregarHistoricoPedidos();
+    }
+    
+    // Roteamento para páginas de Produto
+    if (document.getElementById("produto-nome")) {
+        carregarDetalheProduto();
+    }
+    
+    if (document.getElementById("lista-produtos")) {
+        configurarOrdenacao(); 
+        carregarListaProdutos(criterioOrdenacaoAtual); 
+    }
+
+    if (document.getElementById("visitor-count")) {
+        atualizarContadorDeVisitas(document.getElementById("visitor-count"));
+    }
+    
+    configurarBotoesProduto();
+    atualizarContadorMenu();
+});
+
+
+// ===============================================
+// 4. FUNÇÕES DE CHECKOUT E MODAL
+// ===============================================
+
+function carregarModalCheckout() {
+    const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+    const checkoutItemsEl = document.getElementById('checkout-items');
+    const checkoutSubtotalEl = document.getElementById('checkout-subtotal');
+    const btnConfirmar = document.getElementById("checkout-confirm");
+    
+    if (!checkoutItemsEl) return;
+    checkoutItemsEl.innerHTML = '';
+    
+    let subtotal = 0;
+    carrinho.forEach(item => {
+        const itemTotal = item.preco * item.qtd;
+        subtotal += itemTotal;
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+        li.innerHTML = `<div><strong>${item.nome}</strong><div class="small text-muted">${item.qtd}x</div></div><div>${itemTotal.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</div>`;
+        checkoutItemsEl.appendChild(li);
+    });
+    
+    if (checkoutSubtotalEl) checkoutSubtotalEl.textContent = subtotal.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+    
+    // Reseta Frete e Total ao abrir o modal
+    freteCalculado = 0;
+    const freteEl = document.getElementById('checkout-frete');
+    const totalEl = document.getElementById('checkout-total');
+    const freteResEl = document.getElementById('frete-resultado');
+    
+    if (freteEl) freteEl.textContent = 'R$ 0,00';
+    if (totalEl) totalEl.textContent = subtotal.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+    if (freteResEl) freteResEl.innerHTML = 'Insira o CEP (8 dígitos) para calcular o valor e prazo de entrega.';
+    
+    if (btnConfirmar) btnConfirmar.disabled = true;
+}
+
+
+function calcularFreteEAtualizarModal() {
+    const inputCep = document.getElementById('input-cep');
+    const freteRes = document.getElementById('frete-resultado');
+    const btnConfirmar = document.getElementById('checkout-confirm');
+    const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+    const subtotal = carrinho.reduce((sum, item) => sum + item.preco * item.qtd, 0);
+
+    if (!inputCep || !freteRes) return;
+    
+    const cep = inputCep.value.replace(/\D/g, ''); 
+    
+    if (cep.length !== 8) {
+        freteRes.innerHTML = '<span class="text-danger">CEP inválido. Insira 8 dígitos.</span>';
+        if (btnConfirmar) btnConfirmar.disabled = true;
+        return;
+    }
+    
+    freteRes.innerHTML = '<span class="text-info"><i class="bi bi-arrow-clockwise spinner-border-sm me-1"></i> Calculando...</span>';
+    
+    // Simulação da chamada da API (Delay artificial para UX)
+    setTimeout(() => {
+        const { frete, prazo } = simularFrete(cep);
+        
+        freteCalculado = frete;
+        fretePrazo = prazo;
+        const totalFinal = subtotal + frete;
+        
+        freteRes.innerHTML = `<span class="text-success">Frete: ${frete.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})} - Prazo: ${prazo} dias úteis</span>`;
+        
+        document.getElementById('checkout-frete').textContent = frete.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        document.getElementById('checkout-total').textContent = totalFinal.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        
+        if (btnConfirmar) btnConfirmar.disabled = false;
+
+    }, 800); 
+}
+
+
+// ===============================================
+// 5. FUNÇÕES DE HISTÓRICO DE PEDIDOS
+// ===============================================
+
+function carregarHistoricoPedidos() {
+    const historicoPedidos = JSON.parse(localStorage.getItem("pedidos_feitos")) || [];
+    const listaPedidosDiv = document.getElementById("lista-pedidos");
+    const mensagemConfirmacao = document.getElementById("mensagem-confirmacao");
+    
+    if (!listaPedidosDiv) return;
+
+    listaPedidosDiv.innerHTML = '';
+    
+    // 1. Exibe a mensagem de confirmação (se for um redirecionamento de checkout)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('status') === 'confirmado') {
+        const idPedido = urlParams.get('id');
+        const pedidoRecente = historicoPedidos.find(p => p.id === idPedido); 
+        
+        if (pedidoRecente) {
+            const dataEnvio = new Date();
+            dataEnvio.setDate(dataEnvio.getDate() + pedidoRecente.prazo); 
+            const dataFormatada = dataEnvio.toLocaleDateString('pt-br');
+
+            mensagemConfirmacao.innerHTML = `
+                <div class="alert alert-success p-4">
+                    <h4 class="alert-heading">✅ Pedido #${idPedido} Confirmado!</h4>
+                    <p>Prazo de entrega: **${pedidoRecente.prazo} dias úteis**.</p>
+                    <p class="mb-0 fw-bold">Seu pedido será entregue até: ${dataFormatada}</p>
+                    <hr>
+                    <p class="mb-2">
+                        <button class="btn btn-sm btn-primary" onclick="window.open('https://rastreamento.correios.com.br/app/index.php', '_blank')">
+                            <i class="bi bi-truck me-1"></i> Rastrear Pedido (Simulação)
+                        </button>
+                        <a href="pedidos.html" class="btn btn-sm btn-outline-secondary">Ver Histórico Completo</a>
+                    </p>
+                </div>
+            `;
+        }
+        window.history.replaceState({}, document.title, "pedidos.html");
+    }
+    
+    // 2. Exibe o histórico completo
+    if (historicoPedidos.length === 0) {
+        listaPedidosDiv.innerHTML = '<div class="col-12"><p class="text-center text-muted">Você ainda não tem pedidos realizados.</p></div>';
+        return;
+    }
+    
+    [...historicoPedidos].reverse().forEach(pedido => {
+        const dataEnvio = new Date();
+        dataEnvio.setDate(dataEnvio.getDate() + pedido.prazo);
+        const dataFormatada = dataEnvio.toLocaleDateString('pt-br');
+
+        const itensHtml = pedido.itens.map(item => 
+            `<span class="badge bg-light text-secondary me-2">${item.nome} (${item.qtd}x)</span>`
+        ).join('');
+        
+        const cardPedido = `
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-3 h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-success">Pedido #${pedido.id}</h5>
+                        <p class="card-text mb-1">Data da Compra: ${pedido.data}</p>
+                        <p class="card-text">Entrega Prevista: ${dataFormatada} (Prazo: ${pedido.prazo} dias)</p>
+                        <p class="card-text">Frete: ${pedido.frete.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</p>
+                        <p class="card-text fw-bold fs-5 mt-auto">Total: ${pedido.total.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</p>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                             <button class="btn btn-sm btn-outline-primary" onclick="window.open('https://rastreamento.correios.com.br/app/index.php', '_blank')">
+                                <i class="bi bi-box-seam me-1"></i> Rastrear
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="excluirPedido('${pedido.id}')">
+                                <i class="bi bi-trash me-1"></i> Excluir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        listaPedidosDiv.innerHTML += cardPedido;
+    });
+}
+
+// ... (O restante das funções do main.js segue aqui, completando o arquivo)
+// ... (O restante do código do main.js segue aqui, completando o arquivo)
 // ===============================================
 // 2. FUNÇÕES ESSENCIAIS DE NAVEGAÇÃO E LÓGICA
 // ===============================================

@@ -59,6 +59,9 @@ const LISTA_PRODUTOS = [
 let criterioOrdenacaoAtual = 'mais_vendidos'; 
 let freteCalculado = 0;
 let fretePrazo = 0;
+// NOVO: Variáveis Globais de Controle de Filtro
+let filtroNomeAtual = '';
+let filtroPrecoMaximoAtual = 200.00; // Deve corresponder ao valor inicial (max) do slider no HTML
 
 // Funções de Suporte (getProduto, ordenarProdutos, etc.)
 function getProduto(id) {
@@ -113,7 +116,6 @@ function simularFrete(cep) {
     return { frete, prazo };
 }
 
-
 // ===============================================
 // 3. FUNÇÕES DE ROTEAMENTO E INICIALIZAÇÃO
 // ===============================================
@@ -128,6 +130,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (document.getElementById("form-cadastro")) {
         document.getElementById("form-cadastro").addEventListener("submit", realizarCadastro);
     }
+
     
     // Roteamento para Carrinho/Checkout
     if (document.getElementById("cart-items")) {
@@ -142,7 +145,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         if (btnConfirmar) {
-            btnConfirmar.addEventListener('click', finalizarCompra);
+            // *** CORREÇÃO: LIGA O BOTÃO À NOVA FUNÇÃO DE SALVAR O PEDIDO ***
+            btnConfirmar.addEventListener('click', confirmarPedido);
         }
         
         if (btnCalcularFrete) {
@@ -171,19 +175,23 @@ document.addEventListener("DOMContentLoaded", function() {
         carregarDetalheProduto();
     }
     
+
     if (document.getElementById("lista-produtos")) {
+        // NOVO: Configura e aplica filtros de busca antes de carregar a lista
+        configurarFiltrosBusca(); 
         configurarOrdenacao(); 
         carregarListaProdutos(criterioOrdenacaoAtual); 
     }
-
+// ...
     if (document.getElementById("visitor-count")) {
         atualizarContadorDeVisitas(document.getElementById("visitor-count"));
     }
     
     configurarBotoesProduto();
     atualizarContadorMenu();
+    // Adicione esta linha para o menu de login/logout
+    atualizarMenuUsuario(); 
 });
-
 
 // ===============================================
 // 4. FUNÇÕES DE CHECKOUT E MODAL
@@ -261,6 +269,57 @@ function calcularFreteEAtualizarModal() {
     }, 800); 
 }
 
+// NOVO: Função para confirmar o pedido, salvar no histórico e limpar o carrinho.
+function confirmarPedido() {
+    let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    const btnConfirmar = document.getElementById("checkout-confirm");
+    
+    if (carrinho.length === 0) {
+        if (typeof showToast === 'function') showToast('O carrinho está vazio.', 'Erro');
+        if (btnConfirmar) btnConfirmar.disabled = true;
+        return;
+    }
+    if (freteCalculado === 0) {
+        if (typeof showToast === 'function') showToast('Calcule o frete antes de confirmar.', 'Erro');
+        return;
+    }
+
+    const subtotal = carrinho.reduce((sum, item) => sum + item.preco * item.qtd, 0);
+    const total = subtotal + freteCalculado;
+    const idPedido = gerarNovoIdPedido();
+    const dataAtual = new Date().toLocaleDateString('pt-br');
+
+    const novoPedido = {
+        id: idPedido,
+        data: dataAtual,
+        itens: carrinho.map(item => ({ nome: item.nome, qtd: item.qtd, preco: item.preco })),
+        frete: freteCalculado,
+        prazo: fretePrazo,
+        total: total
+    };
+
+    // 1. Salva o pedido no histórico
+    let historicoPedidos = JSON.parse(localStorage.getItem("pedidos_feitos")) || [];
+    historicoPedidos.push(novoPedido);
+    localStorage.setItem("pedidos_feitos", JSON.stringify(historicoPedidos));
+    
+    // 2. Limpa o carrinho
+    localStorage.removeItem('carrinho');
+    atualizarContadorMenu();
+
+    // 3. Fecha o modal (Garantindo que o Bootstrap o feche)
+    const modalEl = document.getElementById('checkoutModal');
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    if(modalInstance) modalInstance.hide();
+    
+    if (typeof showToast === 'function') showToast(`Pedido #${idPedido} confirmado! Redirecionando...`, 'Sucesso');
+
+    // 4. Redireciona para pedidos.html com status de confirmação
+    setTimeout(function(){ 
+        window.location.href = `pedidos.html?status=confirmado&id=${idPedido}`;
+    }, 1500);
+}
+
 
 // ===============================================
 // 5. FUNÇÕES DE HISTÓRICO DE PEDIDOS
@@ -282,6 +341,7 @@ function carregarHistoricoPedidos() {
         const pedidoRecente = historicoPedidos.find(p => p.id === idPedido); 
         
         if (pedidoRecente) {
+            // A data de entrega é a data de hoje + prazo de dias
             const dataEnvio = new Date();
             dataEnvio.setDate(dataEnvio.getDate() + pedidoRecente.prazo); 
             const dataFormatada = dataEnvio.toLocaleDateString('pt-br');
@@ -310,14 +370,13 @@ function carregarHistoricoPedidos() {
         return;
     }
     
+    // Mostra do mais recente para o mais antigo
     [...historicoPedidos].reverse().forEach(pedido => {
         const dataEnvio = new Date();
         dataEnvio.setDate(dataEnvio.getDate() + pedido.prazo);
         const dataFormatada = dataEnvio.toLocaleDateString('pt-br');
 
-        const itensHtml = pedido.itens.map(item => 
-            `<span class="badge bg-light text-secondary me-2">${item.nome} (${item.qtd}x)</span>`
-        ).join('');
+        // Note: Itens não são exibidos no resumo do card para simplificar, apenas o total.
         
         const cardPedido = `
             <div class="col-md-6">
@@ -334,7 +393,7 @@ function carregarHistoricoPedidos() {
                                 <i class="bi bi-box-seam me-1"></i> Rastrear
                             </button>
                             <button class="btn btn-sm btn-outline-danger" onclick="excluirPedido('${pedido.id}')">
-                                <i class="bi bi-trash me-1"></i> Excluir
+                                <i class="bi bi-trash me-1"></i> Excluir/Cancelar
                             </button>
                         </div>
                     </div>
@@ -345,8 +404,160 @@ function carregarHistoricoPedidos() {
     });
 }
 
+// NOVO: Função para excluir um pedido (Solicitado pelo usuário)
+function excluirPedido(id) {
+    let historicoPedidos = JSON.parse(localStorage.getItem("pedidos_feitos")) || [];
+    // Filtra para remover o pedido com o ID correspondente
+    historicoPedidos = historicoPedidos.filter(p => p.id !== id);
+    
+    localStorage.setItem("pedidos_feitos", JSON.stringify(historicoPedidos));
+    carregarHistoricoPedidos(); // Recarrega a lista
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('id') === id) {
+         window.history.replaceState({}, document.title, "pedidos.html");
+         const mensagemEl = document.getElementById("mensagem-confirmacao");
+         if(mensagemEl) mensagemEl.innerHTML = '';
+    }
+    if (typeof showToast === 'function') showToast(`Pedido #${id} excluído/cancelado.`, 'Histórico');
+}
+// // ===============================================
+// // 5. FUNÇÕES DE HISTÓRICO DE PEDIDOS
+// // ===============================================
+
+// function carregarHistoricoPedidos() {
+//     const historicoPedidos = JSON.parse(localStorage.getItem("pedidos_feitos")) || [];
+//     const listaPedidosDiv = document.getElementById("lista-pedidos");
+//     const mensagemConfirmacao = document.getElementById("mensagem-confirmacao");
+    
+//     if (!listaPedidosDiv) return;
+
+//     listaPedidosDiv.innerHTML = '';
+    
+//     // 1. Exibe a mensagem de confirmação (se for um redirecionamento de checkout)
+//     const urlParams = new URLSearchParams(window.location.search);
+//     if (urlParams.get('status') === 'confirmado') {
+//         const idPedido = urlParams.get('id');
+//         const pedidoRecente = historicoPedidos.find(p => p.id === idPedido); 
+        
+//         if (pedidoRecente) {
+//             const dataEnvio = new Date();
+//             dataEnvio.setDate(dataEnvio.getDate() + pedidoRecente.prazo); 
+//             const dataFormatada = dataEnvio.toLocaleDateString('pt-br');
+
+//             mensagemConfirmacao.innerHTML = `
+//                 <div class="alert alert-success p-4">
+//                     <h4 class="alert-heading">✅ Pedido #${idPedido} Confirmado!</h4>
+//                     <p>Prazo de entrega: **${pedidoRecente.prazo} dias úteis**.</p>
+//                     <p class="mb-0 fw-bold">Seu pedido será entregue até: ${dataFormatada}</p>
+//                     <hr>
+//                     <p class="mb-2">
+//                         <button class="btn btn-sm btn-primary" onclick="window.open('https://rastreamento.correios.com.br/app/index.php', '_blank')">
+//                             <i class="bi bi-truck me-1"></i> Rastrear Pedido (Simulação)
+//                         </button>
+//                         <a href="pedidos.html" class="btn btn-sm btn-outline-secondary">Ver Histórico Completo</a>
+//                     </p>
+//                 </div>
+//             `;
+//         }
+//         window.history.replaceState({}, document.title, "pedidos.html");
+//     }
+    
+//     // 2. Exibe o histórico completo
+//     if (historicoPedidos.length === 0) {
+//         listaPedidosDiv.innerHTML = '<div class="col-12"><p class="text-center text-muted">Você ainda não tem pedidos realizados.</p></div>';
+//         return;
+//     }
+    
+//     [...historicoPedidos].reverse().forEach(pedido => {
+//         const dataEnvio = new Date();
+//         dataEnvio.setDate(dataEnvio.getDate() + pedido.prazo);
+//         const dataFormatada = dataEnvio.toLocaleDateString('pt-br');
+
+//         const itensHtml = pedido.itens.map(item => 
+//             `<span class="badge bg-light text-secondary me-2">${item.nome} (${item.qtd}x)</span>`
+//         ).join('');
+        
+//         const cardPedido = `
+//             <div class="col-md-6">
+//                 <div class="card shadow-sm mb-3 h-100">
+//                     <div class="card-body d-flex flex-column">
+//                         <h5 class="card-title text-success">Pedido #${pedido.id}</h5>
+//                         <p class="card-text mb-1">Data da Compra: ${pedido.data}</p>
+//                         <p class="card-text">Entrega Prevista: ${dataFormatada} (Prazo: ${pedido.prazo} dias)</p>
+//                         <p class="card-text">Frete: ${pedido.frete.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</p>
+//                         <p class="card-text fw-bold fs-5 mt-auto">Total: ${pedido.total.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</p>
+                        
+//                         <div class="d-flex justify-content-between align-items-center">
+//                              <button class="btn btn-sm btn-outline-primary" onclick="window.open('https://rastreamento.correios.com.br/app/index.php', '_blank')">
+//                                 <i class="bi bi-box-seam me-1"></i> Rastrear
+//                             </button>
+//                             <button class="btn btn-sm btn-outline-danger" onclick="excluirPedido('${pedido.id}')">
+//                                 <i class="bi bi-trash me-1"></i> Excluir
+//                             </button>
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+//         `;
+//         listaPedidosDiv.innerHTML += cardPedido;
+//     });
+// }
+
 // ... (O restante das funções do main.js segue aqui, completando o arquivo)
 // ... (O restante do código do main.js segue aqui, completando o arquivo)
+// ===============================================
+// NOVO: FUNÇÃO PARA CONFIGURAR FILTROS DE BUSCA (NOME E PREÇO)
+// ===============================================
+
+function configurarFiltrosBusca() {
+    const inputBuscaNome = document.getElementById('input-busca-nome');
+    const rangePreco = document.getElementById('rangePreco');
+    const valorPrecoSpan = document.getElementById('valor-preco');
+    const btnAplicarFiltros = document.getElementById('btn-aplicar-filtros');
+
+    // 1. Inicializa o span de preço (formatado)
+    if(rangePreco && valorPrecoSpan) {
+        valorPrecoSpan.textContent = parseFloat(rangePreco.value).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        filtroPrecoMaximoAtual = parseFloat(rangePreco.value);
+    }
+    
+    // 2. Listener para o Range Slider (atualiza o texto e a variável de filtro)
+    if (rangePreco) {
+        rangePreco.addEventListener('input', function() {
+            const valor = parseFloat(this.value);
+            valorPrecoSpan.textContent = valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+            // Atualiza a variável global temporariamente
+            filtroPrecoMaximoAtual = valor;
+        });
+    }
+
+    // 3. Listener para o botão "Aplicar Filtros" (aplica nome e preço)
+    if (btnAplicarFiltros) {
+        btnAplicarFiltros.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Atualiza o filtro de nome global e aplica o filtro de preço
+            if (inputBuscaNome) {
+                filtroNomeAtual = inputBuscaNome.value.trim();
+            }
+            // Chama a função principal de carregamento/filtragem
+            carregarListaProdutos(criterioOrdenacaoAtual);
+        });
+    }
+
+    // 4. Bônus: Filtra ao digitar no campo de nome (melhor experiência)
+    if (inputBuscaNome) {
+        inputBuscaNome.addEventListener('keyup', function() {
+            filtroNomeAtual = this.value.trim();
+            // Debounce: espera 300ms antes de recarregar para não sobrecarregar
+            clearTimeout(window.filtroTimer); 
+            window.filtroTimer = setTimeout(() => {
+                carregarListaProdutos(criterioOrdenacaoAtual);
+            }, 300); 
+        });
+    }
+}
 // ===============================================
 // 2. FUNÇÕES ESSENCIAIS DE NAVEGAÇÃO E LÓGICA
 // ===============================================
@@ -550,29 +761,52 @@ $(function(){
     $('#email, #senha').on('input focus', function(){
         $('#mensagem-feedback').fadeOut(120, function(){ $(this).html('').show(); });
     });
-});
+
+    // ... (código existente da função de login e cadastro)
+
+    // Clear feedback when typing
+    $('#email, #senha').on('input focus', function(){
+        $('#mensagem-feedback').fadeOut(120, function(){ $(this).html('').show(); });
+    });
+
+    /* NOVO: CORREÇÃO PARA O PROBLEMA DE CLIQUE DUPLICADO NO CARRINHO */
+    // Usa um listener delegado no 'document' para garantir que ele funcione 
+    // em botões carregados dinamicamente e não seja duplicado, corrigindo o bug.
+    $(document).on('click', '.btn-add-cart', function(){
+        const $btn = $(this);
+        const id = $btn.data('id');
+        const nome = $btn.data('nome');
+        const preco = $btn.data('preco');
+        const img = $btn.data('img');
+        
+        adicionarAoCarrinho(id, nome, preco, img, 1); 
+    });
+
+}); // Fim do bloco jQuery $(function() { ...
+
+
 
 // showToast centralizado em `js/utils.js` (carregado antes de main.js). Não sobrescrever aqui.
 
 
-/**
- * Adiciona ouvintes de clique aos botões de "Adicionar"
- */
-function configurarBotoesProduto() {
-    // Botões "Adicionar ao Carrinho"
-    document.querySelectorAll(".btn-add-cart").forEach(botao => {
-        botao.addEventListener("click", function() {
-            const id = this.getAttribute("data-id");
-            const nome = this.getAttribute("data-nome");
-            const preco = parseFloat(this.getAttribute("data-preco"));
-            const img = this.getAttribute("data-img");
+// /**
+//  * Adiciona ouvintes de clique aos botões de "Adicionar"
+//  */
+// function configurarBotoesProduto() {
+//     // Botões "Adicionar ao Carrinho"
+//     document.querySelectorAll(".btn-add-cart").forEach(botao => {
+//         botao.addEventListener("click", function() {
+//             const id = this.getAttribute("data-id");
+//             const nome = this.getAttribute("data-nome");
+//             const preco = parseFloat(this.getAttribute("data-preco"));
+//             const img = this.getAttribute("data-img");
             
-            adicionarAoCarrinho(id, nome, preco, img, 1); 
-            if (typeof showToast === 'function') showToast(`${nome} adicionado ao carrinho`, 'Carrinho');
-        });
-    });
-    // O código de Curtidas (Likes) foi removido.
-}
+//             adicionarAoCarrinho(id, nome, preco, img, 1); 
+//             if (typeof showToast === 'function') showToast(`${nome} adicionado ao carrinho`, 'Carrinho');
+//         });
+//     });
+//     // O código de Curtidas (Likes) foi removido.
+// }
 
 /**
  * Adiciona um item ao carrinho
@@ -616,6 +850,66 @@ function configurarOrdenacao() {
 }
 
 
+// function carregarListaProdutos(criterio = 'mais_vendidos') {
+//     // 1. Pega a categoria da URL e filtra
+//     const urlParams = new URLSearchParams(window.location.search);
+//     const categoria = urlParams.get('categoria') || 'todos'; 
+//     let produtosFiltrados = getProdutosPorCategoria(categoria);
+    
+//     // 2. APLICA A ORDENAÇÃO
+//     produtosFiltrados = ordenarProdutos(produtosFiltrados, criterio);
+    
+//     const listaProdutosDiv = document.getElementById("lista-produtos");
+//     const totalEncontrado = document.getElementById("total-encontrado");
+//     const categoriaTitulo = document.getElementById("categoria-titulo");
+
+//     if(listaProdutosDiv) listaProdutosDiv.innerHTML = "";
+    
+//     if(categoriaTitulo) categoriaTitulo.textContent = `Categoria: ${categoria.charAt(0).toUpperCase() + categoria.slice(1)}`;
+//     if(totalEncontrado) totalEncontrado.textContent = produtosFiltrados.length;
+
+//     if (produtosFiltrados.length === 0) {
+//         if(listaProdutosDiv) listaProdutosDiv.innerHTML = '<div class="col-12"><p class="alert alert-warning">Nenhum produto encontrado nesta categoria.</p></div>';
+//         return;
+//     }
+
+//     // 3. Cria os cards de produto dinamicamente
+//     produtosFiltrados.forEach(produto => {
+//         const cardHtml = `
+//             <div class="col-md-4">
+//                 <div class="card product-card shadow-sm h-100 border-0">
+//                     <a href="detalhe.html?id=${produto.id}" class="text-decoration-none product-link">
+//                         <div class="card-img-wrap position-relative overflow-hidden">
+//                             <img src="${produto.img}" class="card-img-top primary-img" alt="${produto.nome}">
+//                             ${produto.imagens_extras && produto.imagens_extras[1] ? `<img src="${produto.imagens_extras[1]}" class="card-img-top alt-img position-absolute top-0 start-0" alt="${produto.nome} - alternativa">` : ''}
+//                         </div>
+//                     </a>
+//                     <div class="card-body d-flex flex-column">
+//                         <h5 class="card-title fw-bold">${produto.nome}</h5>
+//                         <p class="card-text text-muted small">${produto.descricao.substring(0, 50)}...</p>
+//                         <h6 class="card-price mb-3 mt-auto">${produto.preco.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</h6> 
+                        
+//                         <div class="d-grid">
+//                             <button class="btn btn-success w-100 btn-add-cart" 
+//                                     data-id="${produto.id}" 
+//                                     data-nome="${produto.nome}" 
+//                                     data-preco="${produto.preco}" 
+//                                     data-img="${produto.img}">
+//                                 Adicionar ao Carrinho
+//                             </button>
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+//         `;
+//         if(listaProdutosDiv) listaProdutosDiv.innerHTML += cardHtml;
+//     });
+
+//     configurarBotoesProduto(); 
+// }
+
+// ... (após a função configurarOrdenacao)
+
 function carregarListaProdutos(criterio = 'mais_vendidos') {
     // 1. Pega a categoria da URL e filtra
     const urlParams = new URLSearchParams(window.location.search);
@@ -625,6 +919,21 @@ function carregarListaProdutos(criterio = 'mais_vendidos') {
     // 2. APLICA A ORDENAÇÃO
     produtosFiltrados = ordenarProdutos(produtosFiltrados, criterio);
     
+    // ===================================
+    // NOVO: APLICAÇÃO DOS FILTROS POR NOME E PREÇO
+    // ===================================
+    
+    produtosFiltrados = produtosFiltrados.filter(produto => {
+        // Filtro por Nome (insensível a maiúsculas/minúsculas)
+        const passaNoFiltroNome = produto.nome.toLowerCase().includes(filtroNomeAtual.toLowerCase());
+        
+        // Filtro por Preço
+        const passaNoFiltroPreco = produto.preco <= filtroPrecoMaximoAtual;
+
+        return passaNoFiltroNome && passaNoFiltroPreco;
+    });
+    // ===================================
+
     const listaProdutosDiv = document.getElementById("lista-produtos");
     const totalEncontrado = document.getElementById("total-encontrado");
     const categoriaTitulo = document.getElementById("categoria-titulo");
@@ -632,7 +941,7 @@ function carregarListaProdutos(criterio = 'mais_vendidos') {
     if(listaProdutosDiv) listaProdutosDiv.innerHTML = "";
     
     if(categoriaTitulo) categoriaTitulo.textContent = `Categoria: ${categoria.charAt(0).toUpperCase() + categoria.slice(1)}`;
-    if(totalEncontrado) totalEncontrado.textContent = produtosFiltrados.length;
+    if(totalEncontrado) totalEncontrado.textContent = produtosFiltrados.length; // Atualiza a contagem
 
     if (produtosFiltrados.length === 0) {
         if(listaProdutosDiv) listaProdutosDiv.innerHTML = '<div class="col-12"><p class="alert alert-warning">Nenhum produto encontrado nesta categoria.</p></div>';
@@ -670,8 +979,6 @@ function carregarListaProdutos(criterio = 'mais_vendidos') {
         `;
         if(listaProdutosDiv) listaProdutosDiv.innerHTML += cardHtml;
     });
-
-    configurarBotoesProduto(); 
 }
 
 function carregarDetalheProduto() {

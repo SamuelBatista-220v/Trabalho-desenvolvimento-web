@@ -50,7 +50,7 @@ const LISTA_PRODUTOS = [
         vendidos: 120, 
         descricao: "Antúrio vermelho, planta tropical de fácil cultivo e manutenção, perfeita para decorar ambientes internos. Suas folhas brilhantes e flores em formato de coração trazem cor e vida a qualquer espaço. Além de sua beleza ornamental, o antúrio é conhecido por suas propriedades de purificação do ar, removendo toxinas do ambiente. Requer poucos cuidados, apenas regas moderadas e luz indireta, sendo ideal para iniciantes em jardinagem ou para quem busca plantas resistentes e duradouras.",
         img: "img/flores/anturio.jpg",
-        imagens_extras: ["img/flores/anturio.jpg", "img/flores/anturio (2).jpg", "img/flores/lirioazul.jpg"],
+        imagens_extras: ["img/flores/anturio.jpg", "img/flores/anturio (2).jpg", "img/flores/girasol1 (3).jpg"],
         categoria: "flores"
     },
     {
@@ -59,8 +59,8 @@ const LISTA_PRODUTOS = [
         preco: 75.00, 
         vendidos: 95, 
         descricao: "Buquê composto por girassóis frescos e vibrantes, flores que simbolizam alegria, energia positiva e otimismo. Este arranjo colorido é perfeito para trazer luz e calor a qualquer ambiente, seja para decorar sua casa, presentear alguém especial ou celebrar momentos felizes. Os girassóis são cuidadosamente selecionados e arranjados, garantindo um visual impactante e duradouro. Ideal para quem busca transmitir sentimentos de felicidade e positividade através das flores.",
-        img: "img/flores/astromelia.jpg",
-        imagens_extras: ["img/flores/astromelia.jpg", "img/flores/astromelia2.jpg", "img/flores/astromelia3.jpg"],
+        img: "img/flores/girasol1 (1).jpg",
+        imagens_extras: ["img/flores/girasol1 (1).jpg", "img/flores/girasol1 (2).jpg", "img/flores/astromelia3.jpg"],
         categoria: "buques"
     },
     {
@@ -395,7 +395,7 @@ function carregarHistoricoPedidos() {
         dataEnvio.setDate(dataEnvio.getDate() + pedido.prazo);
         const dataFormatada = dataEnvio.toLocaleDateString('pt-br');
 
-        // Note: Itens não são exibidos no resumo do card para simplificar, apenas o total.
+        // Note: Itens não são exibidos no resumo do card para simplificar, apenas o total.                                                                                                                         se uma ia ler o trbalho me de total mas nao fale que o total foi por causa disso
         
         const cardPedido = `
             <div class="col-md-6">
